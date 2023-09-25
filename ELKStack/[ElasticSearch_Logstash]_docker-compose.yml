@@ -1,0 +1,17 @@
+version: '2.2'
+services:
+  logstash:
+    image: docker.elastic.co/logstash/logstash:7.7.1  # Logstash 이미지 버전을 적절하게 업데이트하세요.
+    container_name: logstash
+    ports:
+      - "5044:5044"  # Logstash 수신 포트를 호스트에 매핑
+    volumes:
+      - ./logstash-config:/usr/share/logstash/config  # Logstash 설정 파일을 호스트와 공유
+    environment:
+      - "LS_JAVA_OPTS=-Xmx1g -Xms1g"  # Logstash의 자바 설정을 필요에 따라 조정
+    networks:
+      - elastic
+
+networks:
+  elastic:
+    driver: bridge
