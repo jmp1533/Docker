@@ -22,7 +22,7 @@ services:
     ports:
       - "9200:9200"
     networks:
-      - es-net
+      - elastic
 
 networks:
   es-net:
