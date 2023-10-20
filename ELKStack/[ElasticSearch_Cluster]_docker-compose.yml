@@ -4,59 +4,89 @@ services:
     image: docker.elastic.co/elasticsearch/elasticsearch:7.7.1
     container_name: es01
     environment:
+      - cluster.name=es-cluster
       - node.name=es01
-      - cluster.name=es-docker-cluster
+      - network.host=0.0.0.0
       - discovery.seed_hosts=es02,es03
       - cluster.initial_master_nodes=es01,es02,es03
-      - bootstrap.memory_lock=true
       - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
-    ulimits:
-      memlock:
-        soft: -1
-        hard: -1
-    volumes:
-      - data01:/usr/share/elasticsearch/data
+      - bootstrap.memory_lock=true
+      - LimitMEMLOCK=infinity
+      - MAX_LOCKED_MEMORY=unlimited
     ports:
       - 9200:9200
     networks:
       - elastic
+    volumes:
+      - data01:/usr/share/elasticsearch/data
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+      nproc:
+        soft: 65536
+        hard: 65536
+      nofile:
+        soft: 65536
+        hard: 65536
   es02:
     image: docker.elastic.co/elasticsearch/elasticsearch:7.7.1
     container_name: es02
     environment:
+      - cluster.name=es-cluster
       - node.name=es02
-      - cluster.name=es-docker-cluster
+      - network.host=0.0.0.0
       - discovery.seed_hosts=es01,es03
       - cluster.initial_master_nodes=es01,es02,es03
-      - bootstrap.memory_lock=true
       - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+      - bootstrap.memory_lock=true
+      - LimitMEMLOCK=infinity
+      - MAX_LOCKED_MEMORY=unlimited
+    ports:
+      - 9201:9201
+    networks:
+      - elastic
+    volumes:
+      - data02:/usr/share/elasticsearch/data
     ulimits:
       memlock:
         soft: -1
         hard: -1
-    volumes:
-      - data02:/usr/share/elasticsearch/data
-    networks:
-      - elastic
+      nproc:
+        soft: 65536
+        hard: 65536
+      nofile:
+        soft: 65536
+        hard: 65536
   es03:
     image: docker.elastic.co/elasticsearch/elasticsearch:7.7.1
     container_name: es03
     environment:
+      - cluster.name=es-cluster
       - node.name=es03
-      - cluster.name=es-docker-cluster
+      - network.host=0.0.0.0
       - discovery.seed_hosts=es01,es02
       - cluster.initial_master_nodes=es01,es02,es03
-      - bootstrap.memory_lock=true
       - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+      - bootstrap.memory_lock=true
+      - LimitMEMLOCK=infinity
+      - MAX_LOCKED_MEMORY=unlimited
+    ports:
+      - 9202:9202
+    networks:
+      - elastic
+    volumes:
+      - data03:/usr/share/elasticsearch/data
     ulimits:
       memlock:
         soft: -1
         hard: -1
-    volumes:
-      - data03:/usr/share/elasticsearch/data
-    networks:
-      - elastic
-
+      nproc:
+        soft: 65536
+        hard: 65536
+      nofile:
+        soft: 65536
+        hard: 65536
 volumes:
   data01:
     driver: local
@@ -64,7 +94,13 @@ volumes:
     driver: local
   data03:
     driver: local
-
 networks:
   elastic:
     driver: bridge
+
+#wsl -d docker-desktop
+#sysctl -w vm.max_map_count=262144
+#sysctl -w vm.swappiness=1
+#sysctl -p
+
+#docker-compose up
