@@ -1,0 +1,25 @@
+version: '2.2'
+services:
+  filebeat:
+    image: docker.elastic.co/beats/filebeat:7.7.1
+    user: root
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /path/to/your/filebeat.yml:/usr/share/filebeat/filebeat.yml
+    networks:
+      - elastic
+networks:
+  elastic:
+    driver: bridge
+
+
+#[filebeat.yml]
+#filebeat.inputs:
+#  - type: log
+#    paths:
+#      - /var/log/*.log
+#output.elasticsearch:
+#  hosts: ["your-logstash-host:5044"]
+
+
+#docker-compose up
