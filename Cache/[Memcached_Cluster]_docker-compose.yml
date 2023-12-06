@@ -1,0 +1,24 @@
+version: '2.2'
+services:
+  memcached1:
+    image: memcached
+    ports:
+      - "11211:11211"
+    environment:
+      MEMCACHEDC_MEMORY: 64
+
+  memcached2:
+    image: memcached
+    ports:
+      - "11212:11211"
+    environment:
+      MEMCACHEDC_MEMORY: 64
+
+  memcached3:
+    image: memcached
+    ports:
+      - "11213:11211"
+    environment:
+      MEMCACHEDC_MEMORY: 64
+
+#docker-compose up
